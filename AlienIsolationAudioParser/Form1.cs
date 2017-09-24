@@ -38,7 +38,7 @@ namespace AlienIsolationAudioParser
             using (File.Create(errorLogPath));
 
             //Pre-define our path 
-            string fileDirectory = @"D:\Documents\Isolation Mod Tools\ALL SOUNDS"; //Might need to change sometimes
+            string fileDirectory = "RAW"; //Moved! Also, this folder will need replenishing everytime from the Isolation Mod Tools folder.
 
             //Start off error log
             using (StreamWriter sw = File.AppendText(errorLogPath))
@@ -167,7 +167,7 @@ namespace AlienIsolationAudioParser
                             {
                                 fileExtension = "WEM"; //caps
                             }
-                            string fileShortNameFULL = originalFileNameLanguage + @"\" + originalFileNameShortName.Substring(0, originalFileNameShortName.Length - 3) + fileExtension;
+                            string fileShortNameFULL = @"EXPORTED\" + originalFileNameLanguage + @"\" + originalFileNameShortName.Substring(0, originalFileNameShortName.Length - 3) + fileExtension;
 
                             //Generate our FileInfo vars for copying and modifying in general
                             FileInfo originalFileInfo = new FileInfo(finalOriginalFilePath);
@@ -187,6 +187,9 @@ namespace AlienIsolationAudioParser
                                 //Copy our file to the correct directory layout and name
                                 originalFileInfo.CopyTo(fileShortNameFULL);
                             }
+
+                            //NEW: Delete original file. We can then gather up any straglers that weren't in the XML.
+                            File.Delete(finalOriginalFilePath);
                         }
                         else
                         {
@@ -205,10 +208,12 @@ namespace AlienIsolationAudioParser
                     {
                         using (StreamWriter sw = File.AppendText(errorLogPath))
                         {
+                            /*
                             sw.WriteLine("REFERENCED SOUND FILE DID NOT HAVE SHORTNAME");
                             sw.WriteLine("Time Occured: " + DateTime.Now.ToString("h:mm:ss tt"));
                             sw.WriteLine("Audio ID: " + originalFileNameID);
                             sw.WriteLine("----------------------------------------");
+                            */
                         }
                     }
                 }
@@ -219,14 +224,24 @@ namespace AlienIsolationAudioParser
                     {
                         //Grab ID
                         string originalFileNameID = file.Attribute("Id").Value.ToString();
-
+                        /*
                         sw.WriteLine("ENCOUNTERED AN EXCEPTION WHILE PROCESSING");
                         sw.WriteLine("Time Occured: " + DateTime.Now.ToString("h:mm:ss tt"));
                         sw.WriteLine("Audio ID: " + originalFileNameID);
                         sw.WriteLine("Error Info: " + ex.Message);
                         sw.WriteLine("----------------------------------------");
+                        */
                     }
                 }
+            }
+
+            //Count up remaining files.
+            string[] files = Directory.GetFiles("RAW", "*.ogg", SearchOption.AllDirectories);
+            using (StreamWriter sw = File.AppendText(errorLogPath))
+            {
+                sw.WriteLine("TOTAL OGG SOUND FILES NOT FOUND IN XML = "+files.Length);
+                sw.WriteLine("THESE FILES CAN BE FOUND IN THE RAW DIRECTORY.");
+                sw.WriteLine("----------------------------------------");
             }
 
             //Done! Open error log and close program.
