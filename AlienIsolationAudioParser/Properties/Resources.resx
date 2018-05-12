@@ -139,4 +139,10 @@
   <data name="python36" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\python36.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="quickbms" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\quickbms.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wavescan" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\wavescan.bms;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

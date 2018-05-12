@@ -8,7 +8,7 @@ Not all final game files are listed in the soundbank I managed to get hold of, s
 
 Converted files will be placed in /DATA/SOUNDS_ORGANISED/ and /DATA/SOUNDS_UNORGANISED/ respectively.
 
-**This tool currently only exports sound effects, no voice lines.**
+**Voice line support is currently a work in progress. Although voice lines will all be exported, they will not all be named.**
 
 ## How to use
 
@@ -16,7 +16,7 @@ Once you've downloaded, copy the executable from the "Build" folder into your Al
 
 Run the program and wait for the it to finish. It will prompt you to press a key before starting. 
 
-**Exporting and renaming is a very long process and will likely take around 30 mins to complete.**
+**Exporting and renaming is a very long process and will likely take around an hour to complete.**
 
 ## Maximising output
 
@@ -28,5 +28,6 @@ Merge the two folders, and repeat this process for both the PS3 and Xbox 360 bui
 
 ## Final mentions
 
- * BNK extraction is made possible by a modified version of [rickvg](https://github.com/rickvg/Wwise-BNKExtract)'s great extractor tool.
- * WEM conversion is made possible by [hcs64](https://github.com/hcs64/ww2ogg)'s ww2ogg and [Yirkha](http://yirkha.fud.cz/progs/foobar2000/revorb.cpp)'s revorb.
+ * BNK extraction is made possible by a modified version of [rickvg's BNKExtract](https://github.com/rickvg/Wwise-BNKExtract).
+ * PCK conversion is made possible by [AlphaTwentyThree's wavescan](http://forum.xentax.com/viewtopic.php?f=17&t=4292) bms plugin, along with [QuickBMS](http://aluigi.altervista.org/quickbms.htm) itself.
+ * WEM conversion is made possible by [hcs64's ww2ogg](https://github.com/hcs64/ww2ogg) and [Yirkha's REVORB](http://yirkha.fud.cz/progs/foobar2000/revorb.cpp).

@@ -103,6 +103,16 @@ namespace AlienIsolationAudioExtractor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] quickbms {
+            get {
+                object obj = ResourceManager.GetObject("quickbms", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] revorb {
             get {
                 object obj = ResourceManager.GetObject("revorb", resourceCulture);
@@ -122,6 +132,16 @@ namespace AlienIsolationAudioExtractor.Properties {
         internal static string SOUNDBANKSINFO {
             get {
                 return ResourceManager.GetString("SOUNDBANKSINFO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] wavescan {
+            get {
+                object obj = ResourceManager.GetObject("wavescan", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

@@ -72,6 +72,7 @@
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\packed_codebooks_aoTuV_603.bin" />
     <EmbeddedResource Include="Resources\base_library.zip" />
+    <EmbeddedResource Include="Resources\wavescan.bms" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -108,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <EmbeddedResource Include="Resources\quickbms.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
