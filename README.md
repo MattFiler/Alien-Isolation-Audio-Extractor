@@ -8,15 +8,19 @@ Not all final game files are listed in the soundbank I managed to get hold of, s
 
 Converted files will be placed in /DATA/SOUNDS_ORGANISED/ and /DATA/SOUNDS_UNORGANISED/ respectively.
 
-**Voice line support is currently a work in progress. Although voice lines will all be exported, they will not all be named.**
+**Voice line support is currently a work in progress. Although all will be exported, only main character files will be named.**
 
 ## How to use
 
+<img align="right" src="https://i.imgur.com/vMyXwYE.png" width="50%">
+
 Once you've downloaded, copy the executable from the "Build" folder into your Alien: Isolation game directory (where AI.exe is located).
 
-Run the program and wait for the it to finish. It will prompt you to press a key before starting. 
+Run the program and wait for the it to finish. It will prompt you to press a key before starting and finishing. Do not prematurely close the program!
 
-**Exporting and renaming is a very long process and will likely take around an hour to complete.**
+**Exporting and renaming is a very long process and will likely take around an hour and a half to complete.**
+
+The conversion process will use around 10GB of storage space while in operation - make sure to have this available before starting.
 
 ## Maximising output
 

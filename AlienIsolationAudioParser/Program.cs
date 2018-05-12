@@ -21,7 +21,7 @@ namespace AlienIsolationAudioExtractor
             Console.WriteLine("Alien: Isolation Audio Extractor" + Environment.NewLine +
                                 "Created by Matt Filer" + Environment.NewLine +
                                 "---" + Environment.NewLine +
-                                "This process will take around 30 minutes to complete." + Environment.NewLine +
+                                "This process will take around an hour and a half to complete." + Environment.NewLine +
                                 "---");
 
             //Validate we're running in the correct directory
@@ -64,7 +64,7 @@ namespace AlienIsolationAudioExtractor
             Console.WriteLine("---" + Environment.NewLine + "Extracting soundbanks:");
             extractSoundbanks();
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting soundbanks:");
+            Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting all soundbank outputs:");
             convertSoundbankFiles();
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting remaining sound files:");
