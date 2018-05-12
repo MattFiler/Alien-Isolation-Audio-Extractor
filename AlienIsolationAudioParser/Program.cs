@@ -18,70 +18,100 @@ namespace AlienIsolationAudioExtractor
 
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Alien: Isolation Audio Extractor" + Environment.NewLine +
-                              "Created by Matt Filer" + Environment.NewLine +
-                              "---" + Environment.NewLine +
-                              "Please be aware this program will take around 30 mins to 1 hour to process.");
-
-            //Validate we're running in the correct directory.
-            if (!File.Exists("AI.exe"))
+            try
             {
-                Console.WriteLine("---" + Environment.NewLine + "Could not locate sounds." + Environment.NewLine + "Please place this tool in your Alien: Isolation directory.");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Alien: Isolation Audio Extractor" + Environment.NewLine +
+                                  "Created by Matt Filer" + Environment.NewLine +
+                                  "---" + Environment.NewLine +
+                                  "This process will take around 30 minutes to an hour to complete." + Environment.NewLine +
+                                  "---");
+
+                //Validate we're running in the correct directory
+                if (!File.Exists("AI.exe"))
+                {
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.WriteLine("Could not locate sounds." + Environment.NewLine + "Please place this tool in your Alien: Isolation directory.");
+                    Console.Read();
+                    Environment.Exit(0);
+                }
+
+                //Check there are no lingering files which could interfere with export
+                if (Directory.Exists(directories[1]) || Directory.Exists(directories[2]))
+                {
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.WriteLine("Files remain from a previous conversion." + Environment.NewLine + "Please delete/rename folders \"" + directories[1] + "\" and \"" + directories[2] + "\" before running again.");
+                    Console.Read();
+                    Environment.Exit(0);
+                }
+
+                //Wait for user input to start
+                Console.WriteLine(Environment.NewLine + "Press any key to begin.");
+                Console.Read();
+
+                //Copy resources and make directories
+                Directory.CreateDirectory(directories[1]);
+                Directory.CreateDirectory(directories[2]);
+                File.WriteAllBytes(directories[2] + "\\ww2ogg.exe", Properties.Resources.ww2ogg);
+                File.WriteAllBytes(directories[2] + "\\revorb.exe", Properties.Resources.revorb);
+                File.WriteAllBytes(directories[2] + "\\bnkextr.exe", Properties.Resources.bnkextr);
+                File.WriteAllBytes(directories[2] + "\\base_library.zip", Properties.Resources.base_library);
+                File.WriteAllBytes(directories[2] + "\\python36.dll", Properties.Resources.python36);
+                File.WriteAllBytes(directories[2] + "\\packed_codebooks_aoTuV_603.bin", Properties.Resources.packed_codebooks_aoTuV_603);
+                
+                //Extract and convert all files
+                Console.WriteLine("---" + Environment.NewLine + "Extracting soundbanks.");
+                extractSoundbanks();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting soundbanks.");
+                convertSoundbankFiles();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting remaining sound files.");
+                convertBaseSoundFiles();
+                
+                //Clear up conversion resources
+                foreach (var file in Directory.GetFiles(directories[2], "*.exe", SearchOption.AllDirectories))
+                {
+                    File.Delete(file);
+                }
+                File.Delete(directories[2] + "\\base_library.zip");
+                File.Delete(directories[2] + "\\python36.dll");
+                File.Delete(directories[2] + "\\packed_codebooks_aoTuV_603.bin");
+
+                //Delete any empty directories from conversion
+                foreach (var directory in Directory.GetDirectories(directories[2]))
+                {
+                    if (Directory.GetFiles(directory).Length == 0 &&
+                        Directory.GetDirectories(directory).Length == 0)
+                    {
+                        Directory.Delete(directory, false);
+                    }
+                }
+
+                //Process file names
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Starting file rename process.");
+                nameFilesIfPossible();
+
+                //Finished
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(Environment.NewLine + "---" + Environment.NewLine +
+                              "Finished processing all files." + Environment.NewLine +
+                              "Press any key to close.");
+                Console.Read();
+            }
+            catch
+            {
+                //Unknown unrecoverable error
+                Console.WriteLine("---");
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine("An unknown error occured during export.");
                 Console.Read();
                 Environment.Exit(0);
             }
-
-            //Copy resources and make directories
-            Directory.CreateDirectory(directories[1]);
-            Directory.CreateDirectory(directories[2]);
-            File.WriteAllBytes(directories[2] + "\\ww2ogg.exe", Properties.Resources.ww2ogg);
-            File.WriteAllBytes(directories[2] + "\\revorb.exe", Properties.Resources.revorb);
-            File.WriteAllBytes(directories[2] + "\\bnkextr.exe", Properties.Resources.bnkextr);
-            File.WriteAllBytes(directories[2] + "\\base_library.zip", Properties.Resources.base_library);
-            File.WriteAllBytes(directories[2] + "\\python36.dll", Properties.Resources.python36);
-            File.WriteAllBytes(directories[2] + "\\packed_codebooks_aoTuV_603.bin", Properties.Resources.packed_codebooks_aoTuV_603);
-
-            //Extract and convert all files
-            Console.WriteLine("---" + Environment.NewLine + "Extracting soundbanks.");
-            extractSoundbanks();
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting soundbanks.");
-            convertSoundbankFiles();
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting remaining sound files.");
-            convertBaseSoundFiles();
-
-            //Clear up conversion resources
-            foreach (var file in Directory.GetFiles(directories[2], "*.exe", SearchOption.AllDirectories))
-            {
-                File.Delete(file);
-            }
-            File.Delete(directories[2] + "\\base_library.zip");
-            File.Delete(directories[2] + "\\python36.dll");
-            File.Delete(directories[2] + "\\packed_codebooks_aoTuV_603.bin");
-
-            //Delete any empty directories from conversion
-            foreach (var directory in Directory.GetDirectories(directories[2]))
-            {
-                if (Directory.GetFiles(directory).Length == 0 &&
-                    Directory.GetDirectories(directory).Length == 0)
-                {
-                    Directory.Delete(directory, false);
-                }
-            }
-
-            //Process file names
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Starting file rename process.");
-            nameFilesIfPossible();
-
-            //Finished
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("---" + Environment.NewLine +
-                          "Finished processing all files." + Environment.NewLine +
-                          "Press any key to close.");
-            Console.Read();
         }
 
 
@@ -121,7 +151,7 @@ namespace AlienIsolationAudioExtractor
                     foreach (string oggFile in Directory.GetFiles(directories[2], originalFileNameID + ".ogg", SearchOption.AllDirectories))
                     {
                         Directory.CreateDirectory(directories[1] + "\\SFX\\" + Path.GetDirectoryName(originalFileNameShortName));
-                        if (!File.Exists(oggFile))
+                        if (!File.Exists(directories[1] + "\\SFX\\" + originalFileNameShortName))
                         {
                             File.Copy(oggFile, directories[1] + "\\SFX\\" + originalFileNameShortName);
                             counter[(int)CounterType.EXPORTED]++;
@@ -155,7 +185,7 @@ namespace AlienIsolationAudioExtractor
                     //Most likely no shortname, this is normal.
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("\r{0}   ", counter[(int)CounterType.EXPORTED] + " named, " + counter[(int)CounterType.NOT_FOUND] + " referenced but not found, " + counter[(int)CounterType.SKIPPED] + " skipped out.");
+                Console.Write("\r{0}   ", counter[(int)CounterType.EXPORTED] + " renamed, " + counter[(int)CounterType.NOT_FOUND] + " referenced but not found, " + counter[(int)CounterType.SKIPPED] + " skipped out.");
             }
         }
 
@@ -171,18 +201,18 @@ namespace AlienIsolationAudioExtractor
             {
                 string inputFile = "..\\SOUND\\" + file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1];
                 string outputFile = file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1];
-                outputFile = outputFile.Substring(0, outputFile.Length - 3) + "ogg";
+                outputFile = outputFile.Substring(0, outputFile.Length - 3);
 
-                if (!File.Exists(outputFile)) //Check file hasn't already been converted.
+                if (!File.Exists(outputFile + "ogg")) //Check file hasn't already been converted.
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(directories[2] + outputFile));
 
-                    RunProgramAndWait("ww2ogg.exe", "\"" + inputFile + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + outputFile + "\"", directories[2]);
-                    RunProgramAndWait("revorb.exe", outputFile, directories[2]);
+                    RunProgramAndWait("ww2ogg.exe", "\"" + inputFile + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + outputFile + "ogg\"", directories[2]);
+                    RunProgramAndWait("revorb.exe", outputFile + "ogg", directories[2]);
 
-                    if (!File.Exists(directories[2] + outputFile))
+                    if (!File.Exists(directories[2] + outputFile + "ogg") && !File.Exists(directories[2] + "\\" + outputFile + "wem"))
                     {
-                        File.Copy(directories[0] + "\\" + file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1], directories[2] + "\\" + outputFile.Substring(0, outputFile.Length - 3) + "wem"); //Couldn't convert, copy original.
+                        File.Copy(directories[0] + "\\" + file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1], directories[2] + "\\" + outputFile + "wem"); //Couldn't convert, copy original.
                     }
                 }
                 
@@ -234,11 +264,15 @@ namespace AlienIsolationAudioExtractor
             var searchQuery = Directory.GetFiles(directories[0], "*.BNK", SearchOption.AllDirectories);
             foreach (var file in searchQuery)
             {
-                string workingFile = file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1];
+                string workingFileLocal = Path.GetFileName(file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1]);
+                string workingFile = directories[2] + "\\" + workingFileLocal;
 
-                File.Copy(file, directories[2] + "\\" + Path.GetFileName(workingFile));
-                RunProgramAndWait("bnkextr.exe", Path.GetFileName(workingFile), directories[2]);
-                File.Delete(directories[2] + "\\" + Path.GetFileName(workingFile)); //Remove BNK after extract.
+                if (File.Exists(workingFile))
+                    File.Delete(workingFile);
+
+                File.Copy(file, workingFile);
+                RunProgramAndWait("bnkextr.exe", workingFileLocal, directories[2]);
+                File.Delete(workingFile); //Remove BNK after extract.
 
                 counter++;
                 Console.ForegroundColor = ConsoleColor.Green;
