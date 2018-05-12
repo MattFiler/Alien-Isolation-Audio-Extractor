@@ -13,7 +13,7 @@ namespace AlienIsolationAudioExtractor
 {
     class Program
     {
-        private static string[] directories = { "DATA\\SOUND", "DATA\\SOUND_ORGANISED", "DATA\\SOUND_CONVERTED" };
+        private static string[] directories = { "DATA\\SOUND", "DATA\\SOUND_ORGANISED", "DATA\\SOUND_UNORGANISED" };
         private enum CounterType { EXPORTED, NOT_FOUND, SKIPPED };
 
         static void Main(string[] args)
@@ -154,6 +154,7 @@ namespace AlienIsolationAudioExtractor
                         if (!File.Exists(directories[1] + "\\SFX\\" + originalFileNameShortName))
                         {
                             File.Copy(oggFile, directories[1] + "\\SFX\\" + originalFileNameShortName);
+                            File.Delete(oggFile);
                             counter[(int)CounterType.EXPORTED]++;
                         }
                         hasFoundFile = true;
@@ -168,6 +169,7 @@ namespace AlienIsolationAudioExtractor
                             if (!File.Exists(directories[1] + "\\SFX\\" + originalFileNameShortName.Substring(0, originalFileNameShortName.Length - 3) + "wem"))
                             {
                                 File.Copy(wemFile, directories[1] + "\\SFX\\" + originalFileNameShortName.Substring(0, originalFileNameShortName.Length - 3) + "wem");
+                                File.Delete(wemFile);
                                 counter[(int)CounterType.EXPORTED]++;
                             }
                             hasFoundFile = true;
@@ -232,7 +234,7 @@ namespace AlienIsolationAudioExtractor
             var searchQuery = Directory.GetFiles(directories[2], "*.wem", SearchOption.AllDirectories);
             foreach (var file in searchQuery)
             {
-                string fileName = file.Split(new[] { "SOUND_CONVERTED\\" }, StringSplitOptions.None)[1];
+                string fileName = file.Split(new[] { "SOUND_UNORGANISED\\" }, StringSplitOptions.None)[1];
                 if (File.Exists(file.Substring(0, file.Length - 3) + "ogg"))
                 {
                     File.Delete(file); //File already converted somehow, ignore.
