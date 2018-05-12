@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Alien: Isolation Audio Parser")]
-[assembly: AssemblyDescription("A tool to name and structure audio files from Alien: Isolation.")]
+[assembly: AssemblyTitle("Alien: Isolation Audio Extractor")]
+[assembly: AssemblyDescription("A tool to export and structure audio files from Alien: Isolation.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Matt Filer")]
-[assembly: AssemblyProduct("AlienIsolationAudioParser")]
+[assembly: AssemblyProduct("Alien: Isolation Audio Extractor")]
 [assembly: AssemblyCopyright("Copyright © Matt Filer 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

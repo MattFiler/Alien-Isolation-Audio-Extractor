@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlienIsolationAudioParser", "AlienIsolationAudioParser\AlienIsolationAudioParser.csproj", "{BE6190D0-2DB2-45A9-B480-EA49BC755AA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlienIsolationAudioExtractor", "AlienIsolationAudioParser\AlienIsolationAudioExtractor.csproj", "{BE6190D0-2DB2-45A9-B480-EA49BC755AA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

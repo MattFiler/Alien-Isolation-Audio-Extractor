@@ -9,7 +9,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace AlienIsolationAudioParser
+namespace AlienIsolationAudioExtractor
 {
     class Program
     {
@@ -17,7 +17,10 @@ namespace AlienIsolationAudioParser
         {
             //Load XML and get file array
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Alien: Isolation Audio Parser" + Environment.NewLine + "Created by Matt Filer");
+            Console.WriteLine("Alien: Isolation Audio Extractor" + Environment.NewLine + 
+                              "Created by Matt Filer" + Environment.NewLine + 
+                              "---" + Environment.NewLine + 
+                              "Please be aware this program will take around 30 mins to 1 hour to process.");
             XDocument soundbankXML = XDocument.Parse(Properties.Resources.SOUNDBANKSINFO);
             var fileArray = soundbankXML.Descendants("File");
 
@@ -37,7 +40,7 @@ namespace AlienIsolationAudioParser
             }
             else
             {
-                Console.WriteLine("---" + Environment.NewLine + "Could not locate sounds." + Environment.NewLine + "Please place AlienIsolationAudioParser in your Alien: Isolation directory.");
+                Console.WriteLine("---" + Environment.NewLine + "Could not locate sounds." + Environment.NewLine + "Please place this tool in your Alien: Isolation directory.");
                 Console.Read();
                 Environment.Exit(0);
             }
@@ -158,7 +161,7 @@ namespace AlienIsolationAudioParser
             Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine+"Starting file rename process.");
 
             //Define our error log path, and then delete and re-make the file to clear it
-            string errorLogPath = "AlienIsolationAudioParser_Errors.txt";
+            string errorLogPath = "Audio Extractor Errors.log";
             if (File.Exists(errorLogPath))
             {
                 File.Delete(errorLogPath);
