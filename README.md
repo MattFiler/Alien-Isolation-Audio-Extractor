@@ -12,11 +12,11 @@ Converted files will be placed in /DATA/SOUNDS_ORGANISED/ and /DATA/SOUNDS_UNORG
 
 ## How to use
 
-Once you've downloaded, copy the executable from the "Builds" folder into your Alien: Isolation game directory (where AI.exe is located).
+Once you've downloaded, copy the executable from the "Build" folder into your Alien: Isolation game directory (where AI.exe is located).
 
 Run the program and wait for the it to finish. It will prompt you to press a key before starting. 
 
-**Exporting and renaming is a very long process and will likely take around 30 mins to an hour to complete.**
+**Exporting and renaming is a very long process and will likely take around 30 mins to complete.**
 
 ## Maximising output
 

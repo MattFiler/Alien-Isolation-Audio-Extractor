@@ -24,7 +24,7 @@ namespace AlienIsolationAudioExtractor
                 Console.WriteLine("Alien: Isolation Audio Extractor" + Environment.NewLine +
                                   "Created by Matt Filer" + Environment.NewLine +
                                   "---" + Environment.NewLine +
-                                  "This process will take around 30 minutes to an hour to complete." + Environment.NewLine +
+                                  "This process will take around 30 minutes to complete." + Environment.NewLine +
                                   "---");
 
                 //Validate we're running in the correct directory
@@ -44,7 +44,7 @@ namespace AlienIsolationAudioExtractor
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.WriteLine("Files remain from a previous conversion." + Environment.NewLine + "Please delete/rename folders \"" + directories[1] + "\" and \"" + directories[2] + "\" before running again.");
                     Console.Read();
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
 
                 //Wait for user input to start
@@ -62,15 +62,15 @@ namespace AlienIsolationAudioExtractor
                 File.WriteAllBytes(directories[2] + "\\packed_codebooks_aoTuV_603.bin", Properties.Resources.packed_codebooks_aoTuV_603);
                 
                 //Extract and convert all files
-                Console.WriteLine("---" + Environment.NewLine + "Extracting soundbanks.");
+                Console.WriteLine("---" + Environment.NewLine + "Extracting soundbanks:");
                 extractSoundbanks();
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting soundbanks.");
+                Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting soundbanks:");
                 convertSoundbankFiles();
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting remaining sound files.");
+                Console.WriteLine(Environment.NewLine + "---" + Environment.NewLine + "Converting remaining sound files:");
                 convertBaseSoundFiles();
-                
+
                 //Clear up conversion resources
                 foreach (var file in Directory.GetFiles(directories[2], "*.exe", SearchOption.AllDirectories))
                 {
@@ -100,7 +100,8 @@ namespace AlienIsolationAudioExtractor
                 Console.Write(Environment.NewLine + "---" + Environment.NewLine +
                               "Finished processing all files." + Environment.NewLine +
                               "Press any key to close.");
-                Console.Read();
+                Console.ReadLine();
+                Environment.Exit(0);
             }
             catch
             {
@@ -109,7 +110,7 @@ namespace AlienIsolationAudioExtractor
                 Console.BackgroundColor = ConsoleColor.Yellow;
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.WriteLine("An unknown error occured during export.");
-                Console.Read();
+                Console.ReadLine();
                 Environment.Exit(0);
             }
         }
@@ -139,6 +140,9 @@ namespace AlienIsolationAudioExtractor
                         originalFileNameShortName = shortName.Value.ToString().Substring(0, shortName.Value.Length - 3) + "ogg";
                     }
 
+                    //Create directory no matter if we find the file.
+                    Directory.CreateDirectory(directories[1] + "\\SFX\\" + Path.GetDirectoryName(originalFileNameShortName));
+
                     //Skip out any non sfx files - currently unsupported
                     if (originalFileNameLanguage != "SFX")
                     {
@@ -150,7 +154,6 @@ namespace AlienIsolationAudioExtractor
                     bool hasFoundFile = false;
                     foreach (string oggFile in Directory.GetFiles(directories[2], originalFileNameID + ".ogg", SearchOption.AllDirectories))
                     {
-                        Directory.CreateDirectory(directories[1] + "\\SFX\\" + Path.GetDirectoryName(originalFileNameShortName));
                         if (!File.Exists(directories[1] + "\\SFX\\" + originalFileNameShortName))
                         {
                             File.Copy(oggFile, directories[1] + "\\SFX\\" + originalFileNameShortName);
@@ -165,7 +168,6 @@ namespace AlienIsolationAudioExtractor
                     {
                         foreach (string wemFile in Directory.GetFiles(directories[2], originalFileNameID + ".wem", SearchOption.AllDirectories))
                         {
-                            Directory.CreateDirectory(directories[1] + "\\SFX\\" + Path.GetDirectoryName(originalFileNameShortName));
                             if (!File.Exists(directories[1] + "\\SFX\\" + originalFileNameShortName.Substring(0, originalFileNameShortName.Length - 3) + "wem"))
                             {
                                 File.Copy(wemFile, directories[1] + "\\SFX\\" + originalFileNameShortName.Substring(0, originalFileNameShortName.Length - 3) + "wem");
@@ -205,22 +207,25 @@ namespace AlienIsolationAudioExtractor
                 string outputFile = file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1];
                 outputFile = outputFile.Substring(0, outputFile.Length - 3);
 
-                if (!File.Exists(outputFile + "ogg")) //Check file hasn't already been converted.
+                if (!File.Exists(directories[2] + outputFile + "ogg")) //Check file hasn't already been converted.
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(directories[2] + outputFile));
 
                     RunProgramAndWait("ww2ogg.exe", "\"" + inputFile + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + outputFile + "ogg\"", directories[2]);
                     RunProgramAndWait("revorb.exe", outputFile + "ogg", directories[2]);
-
-                    if (!File.Exists(directories[2] + outputFile + "ogg") && !File.Exists(directories[2] + "\\" + outputFile + "wem"))
-                    {
-                        File.Copy(directories[0] + "\\" + file.Split(new[] { "SOUND\\" }, StringSplitOptions.None)[1], directories[2] + "\\" + outputFile + "wem"); //Couldn't convert, copy original.
-                    }
                 }
                 
                 counter++;
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("\r{0}   ", counter + " of " + searchQuery.Count() + " converted.");
+            }
+            foreach (string file in Directory.GetFiles(directories[0], "*.WEM", SearchOption.AllDirectories))
+            {
+                string fileThatShouldExist = directories[2] + "\\" + Path.GetFileNameWithoutExtension(file) + "."; //Support for directories here?
+                if (!File.Exists(fileThatShouldExist + "ogg"))
+                {
+                    File.Copy(file, fileThatShouldExist + "wem"); //Copy over any failed conversions to OGG in their raw WEM format to fill the gaps.
+                }
             }
         }
 
@@ -235,23 +240,19 @@ namespace AlienIsolationAudioExtractor
             foreach (var file in searchQuery)
             {
                 string fileName = file.Split(new[] { "SOUND_UNORGANISED\\" }, StringSplitOptions.None)[1];
+
+                RunProgramAndWait("ww2ogg.exe", "\"" + fileName + "\" --pcb packed_codebooks_aoTuV_603.bin", directories[2]);
+                RunProgramAndWait("revorb.exe", fileName.Substring(0, fileName.Length - 3) + "ogg", directories[2]);
+
+                counter++;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("\r{0}   ", counter + " of " + searchQuery.Count() + " converted.");
+            }
+            foreach (var file in searchQuery)
+            {
                 if (File.Exists(file.Substring(0, file.Length - 3) + "ogg"))
                 {
-                    File.Delete(file); //File already converted somehow, ignore.
-                }
-                else
-                {
-                    RunProgramAndWait("ww2ogg.exe", "\"" + fileName + "\" --pcb packed_codebooks_aoTuV_603.bin", directories[2]);
-                    RunProgramAndWait("revorb.exe", fileName.Substring(0, fileName.Length - 3) + "ogg", directories[2]);
-
-                    if (File.Exists(file.Substring(0, file.Length - 3) + "ogg"))
-                    {
-                        File.Delete(file); //Only delete original if conversion successful.
-                    }
-
-                    counter++;
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("\r{0}   ", counter + " of " + searchQuery.Count() + " converted.");
+                    File.Delete(file); //Delete all converted WEMs (can't do this at conversion time as the file won't have processed yet)
                 }
             }
         }
