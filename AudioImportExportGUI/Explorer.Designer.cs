@@ -50,6 +50,12 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandAllDirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shrinkAllDirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugtestbtn = new System.Windows.Forms.Button();
+            this.debugtest = new System.Windows.Forms.TextBox();
+            this.debugtestout = new System.Windows.Forms.TextBox();
+            this.debugtestout2 = new System.Windows.Forms.TextBox();
+            this.debugtest2 = new System.Windows.Forms.TextBox();
+            this.debugtestbtn2 = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -190,8 +196,9 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open PCK";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -242,11 +249,65 @@
             this.shrinkAllDirectoriesToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.shrinkAllDirectoriesToolStripMenuItem.Text = "Shrink All Directories";
             // 
+            // debugtestbtn
+            // 
+            this.debugtestbtn.Location = new System.Drawing.Point(613, 429);
+            this.debugtestbtn.Name = "debugtestbtn";
+            this.debugtestbtn.Size = new System.Drawing.Size(75, 23);
+            this.debugtestbtn.TabIndex = 15;
+            this.debugtestbtn.Text = "button1";
+            this.debugtestbtn.UseVisualStyleBackColor = true;
+            this.debugtestbtn.Click += new System.EventHandler(this.debugtestbtn_Click);
+            // 
+            // debugtest
+            // 
+            this.debugtest.Location = new System.Drawing.Point(507, 431);
+            this.debugtest.Name = "debugtest";
+            this.debugtest.Size = new System.Drawing.Size(100, 20);
+            this.debugtest.TabIndex = 16;
+            // 
+            // debugtestout
+            // 
+            this.debugtestout.Location = new System.Drawing.Point(507, 457);
+            this.debugtestout.Name = "debugtestout";
+            this.debugtestout.Size = new System.Drawing.Size(277, 20);
+            this.debugtestout.TabIndex = 17;
+            // 
+            // debugtestout2
+            // 
+            this.debugtestout2.Location = new System.Drawing.Point(507, 538);
+            this.debugtestout2.Name = "debugtestout2";
+            this.debugtestout2.Size = new System.Drawing.Size(277, 20);
+            this.debugtestout2.TabIndex = 20;
+            // 
+            // debugtest2
+            // 
+            this.debugtest2.Location = new System.Drawing.Point(507, 512);
+            this.debugtest2.Name = "debugtest2";
+            this.debugtest2.Size = new System.Drawing.Size(100, 20);
+            this.debugtest2.TabIndex = 19;
+            // 
+            // debugtestbtn2
+            // 
+            this.debugtestbtn2.Location = new System.Drawing.Point(613, 510);
+            this.debugtestbtn2.Name = "debugtestbtn2";
+            this.debugtestbtn2.Size = new System.Drawing.Size(75, 23);
+            this.debugtestbtn2.TabIndex = 18;
+            this.debugtestbtn2.Text = "button1";
+            this.debugtestbtn2.UseVisualStyleBackColor = true;
+            this.debugtestbtn2.Click += new System.EventHandler(this.debugtestbtn2_Click);
+            // 
             // Explorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 703);
+            this.Controls.Add(this.debugtestout2);
+            this.Controls.Add(this.debugtest2);
+            this.Controls.Add(this.debugtestbtn2);
+            this.Controls.Add(this.debugtestout);
+            this.Controls.Add(this.debugtest);
+            this.Controls.Add(this.debugtestbtn);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -291,6 +352,12 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expandAllDirectoriesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shrinkAllDirectoriesToolStripMenuItem;
+        private System.Windows.Forms.Button debugtestbtn;
+        private System.Windows.Forms.TextBox debugtest;
+        private System.Windows.Forms.TextBox debugtestout;
+        private System.Windows.Forms.TextBox debugtestout2;
+        private System.Windows.Forms.TextBox debugtest2;
+        private System.Windows.Forms.Button debugtestbtn2;
     }
 }
 
