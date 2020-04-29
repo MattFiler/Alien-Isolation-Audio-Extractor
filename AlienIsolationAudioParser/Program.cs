@@ -158,7 +158,6 @@ namespace AlienIsolationAudioExtractor
                 {
                     if (thisFile["original_id"].Value<int>() == thisFileID)
                     {
-                        string inName = Path.GetFileName(file);
                         string outPath = Path.GetDirectoryName(directories[1] + "/" + thisFile["new_name"].Value<string>());
                         string outName = Path.GetFileName(thisFile["new_name"].Value<string>());
 
@@ -189,8 +188,8 @@ namespace AlienIsolationAudioExtractor
         /* Convert a WEM in the working directory */
         private static bool convertWEM(string inName)
         {
-            RunProgramAndWait("ww2ogg.exe", "\"" + inName + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + inName + "_conv\"", directories[2]);
-            RunProgramAndWait("revorb.exe", inName + "_conv", directories[2]);
+            RunProgramAndWait("ww2ogg.exe", "\"" + Path.GetFileName(inName) + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + Path.GetFileName(inName) + "_conv\"", directories[2]);
+            RunProgramAndWait("revorb.exe", Path.GetFileName(inName) + "_conv", directories[2]);
             if (!File.Exists(inName + "_conv")) return false;
             File.Delete(inName);
             File.Move(inName + "_conv", inName);
