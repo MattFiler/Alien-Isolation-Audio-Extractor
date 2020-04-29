@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Diagnostics;
 using System.IO;
-using System.Xml;
-using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace AlienIsolationAudioExtractor
@@ -42,39 +36,25 @@ namespace AlienIsolationAudioExtractor
             //Copy resources and make directories
             Directory.CreateDirectory(directories[1]);
             Directory.CreateDirectory(directories[2]);
-            File.WriteAllBytes(directories[2] + "\\ww2ogg.exe", Properties.Resources.ww2ogg);
-            File.WriteAllBytes(directories[2] + "\\revorb.exe", Properties.Resources.revorb);
-            File.WriteAllBytes(directories[2] + "\\bnkextr.exe", Properties.Resources.bnkextr);
-            File.WriteAllBytes(directories[2] + "\\base_library.zip", Properties.Resources.base_library);
-            File.WriteAllBytes(directories[2] + "\\python36.dll", Properties.Resources.python36);
-            File.WriteAllBytes(directories[2] + "\\packed_codebooks_aoTuV_603.bin", Properties.Resources.packed_codebooks_aoTuV_603);
-            File.WriteAllBytes(directories[2] + "\\quickbms.exe", Properties.Resources.quickbms);
-            File.WriteAllBytes(directories[2] + "\\wavescan.bms", Properties.Resources.wavescan);
+            AddConvertersToDirectory(directories[2]);
 
             //Get all WEM files into our working directory
             Console.WriteLine("Copying WEMs...");
-            copyWEMs();
+            CopyWemToWorkingDirectory();
             Console.WriteLine("Extracting BNK soundbanks...");
-            extractBNK();
+            ExtractBnkToWorkingDirectory();
             Console.WriteLine("Extracting PCK soundbanks...");
-            extractPCK();
+            ExtractPckToWorkingDirectory();
 
             //Convert and name the WEMs
             Console.WriteLine("Converting to proper names...");
-            renameWEMs();
+            RenameWemFiles();
             Console.WriteLine("Converting untitled sounds...");
-            tidyWEMs();
+            ConvertRemainingWemFiles();
 
             //Clear up conversion resources
             Console.WriteLine("Clearing up...");
-            foreach (var file in Directory.GetFiles(directories[2], "*.exe", SearchOption.AllDirectories))
-            {
-                File.Delete(file);
-            }
-            File.Delete(directories[2] + "\\base_library.zip");
-            File.Delete(directories[2] + "\\python36.dll");
-            File.Delete(directories[2] + "\\packed_codebooks_aoTuV_603.bin");
-            File.Delete(directories[2] + "\\wavescan.bms");
+            RemoveConvertersFromDirectory(directories[2]);
 
             //Finished
             Process.Start(directories[1]);
@@ -82,7 +62,7 @@ namespace AlienIsolationAudioExtractor
         }
 
         /* Copy existing WEMs to our working directory */
-        private static void copyWEMs()
+        private static void CopyWemToWorkingDirectory()
         {
             string[] searchQuery = Directory.GetFiles(directories[0], "*.WEM", SearchOption.AllDirectories);
             foreach (string file in searchQuery)
@@ -91,8 +71,8 @@ namespace AlienIsolationAudioExtractor
             }
         }
 
-        /* Try and extract all soundbank files */
-        private static void extractBNK()
+        /* Try and extract all soundbank files to working directory */
+        private static void ExtractBnkToWorkingDirectory()
         {
             var searchQuery = Directory.GetFiles(directories[0], "*.BNK", SearchOption.AllDirectories);
             foreach (var file in searchQuery)
@@ -108,46 +88,41 @@ namespace AlienIsolationAudioExtractor
                 File.Delete(workingFile); //Remove BNK after extract.
             }
         }
-        private static void extractPCK()
+        private static void ExtractPckToWorkingDirectory()
         {
             var searchQueryPCK = Directory.GetFiles(directories[0], "*.PCK", SearchOption.AllDirectories);
             foreach (var file in searchQueryPCK)
             {
-                string folderName = Path.GetFileNameWithoutExtension(file).Substring(0, Path.GetFileNameWithoutExtension(file).Length - 9);
-                string workingFile = directories[2] + "\\" + folderName + "\\" + Path.GetFileName(file);
-                string workingFileLocal = folderName + "\\" + Path.GetFileName(file);
+                BinaryReader reader = new BinaryReader(File.OpenRead(file));
+                reader.BaseStream.Position += 12;
+                reader.BaseStream.Position += reader.ReadInt32() + 20;
 
-                Directory.CreateDirectory(directories[2] + "\\" + folderName);
-
-                if (File.Exists(workingFile))
-                    File.Delete(workingFile);
-
-                File.Copy(file, workingFile);
-                File.Copy(directories[2] + "\\quickbms.exe", directories[2] + "\\" + folderName + "\\quickbms.exe");
-                RunProgramAndWait("quickbms.exe", "\"../wavescan.bms\" \"" + Path.GetFileName(file) + "\" \"\"", directories[2] + "\\" + folderName);
-                File.Delete(workingFile);
-
-                foreach (var exportedFile in Directory.GetFiles(directories[2] + "\\" + folderName, "*.wem", SearchOption.AllDirectories))
+                List<AudioFile> audioFiles = new List<AudioFile>(reader.ReadInt32());
+                for (int i = 0; i < audioFiles.Capacity; i++)
                 {
-                    string newFileName = Path.GetFileName(exportedFile).Substring(Path.GetFileNameWithoutExtension(file).Length + 1);
-                    if (newFileName.Contains("~"))
-                    {
-                        newFileName = newFileName.Split('~')[1];
-                    }
-                    if (!File.Exists(Path.GetDirectoryName(exportedFile) + "\\" + newFileName))
-                    {
-                        File.Move(exportedFile, Path.GetDirectoryName(exportedFile) + "\\" + newFileName);
-                    }
-                    else
-                    {
-                        File.Delete(exportedFile); //Duplicate file - this is an odd error.
-                    }
+                    AudioFile thisFile = new AudioFile();
+                    thisFile.fileID = reader.ReadInt32();
+                    thisFile.unk1 = reader.ReadInt32();
+                    thisFile.fileLength = reader.ReadInt32();
+                    thisFile.offsetInPCK = reader.ReadInt32();
+                    thisFile.unk2 = reader.ReadInt32();
+                    audioFiles.Add(thisFile);
                 }
+                foreach (AudioFile thisFile in audioFiles)
+                {
+                    reader.BaseStream.Position = thisFile.offsetInPCK;
+                    BinaryWriter writer = new BinaryWriter(File.OpenWrite(directories[2] + "/" + thisFile.fileID + ".WEM"));
+                    writer.BaseStream.SetLength(0);
+                    writer.Write(reader.ReadBytes(thisFile.fileLength));
+                    writer.Close();
+                }
+
+                reader.Close();
             }
         }
 
-        /* Match WEMs in the working directory with an entry in the soundbank, then convert and rename */
-        private static void renameWEMs()
+        /* Match WEMs in the working directory with an entry in the soundbank, then convert to OGG and rename */
+        private static void RenameWemFiles()
         {
             JArray soundbankData = JObject.Parse(Properties.Resources.soundbank)["soundbank_names"].ToObject<JArray>();
             var searchQuery = Directory.GetFiles(directories[2], "*.WEM", SearchOption.TopDirectoryOnly);
@@ -163,7 +138,7 @@ namespace AlienIsolationAudioExtractor
 
                         Directory.CreateDirectory(outPath);
                         outPath += "/" + outName;
-                        if (convertWEM(file)) outPath = outPath.Substring(0, outPath.Length - 3) + "ogg";
+                        if (ConvertWEM(file)) outPath = outPath.Substring(0, outPath.Length - 3) + "ogg";
                         else outPath = outPath.Substring(0, outPath.Length - 3) + "wem";
 
                         if (File.Exists(outPath)) File.Delete(outPath);
@@ -175,25 +150,47 @@ namespace AlienIsolationAudioExtractor
             }
         }
 
-        /* Convert remaining untitled WEMs in the working directory to OGG if possible */
-        private static void tidyWEMs()
+        /* Convert remaining untitled WEMs in the working directory to OGG */
+        private static void ConvertRemainingWemFiles()
         {
             var searchQuery = Directory.GetFiles(directories[2], "*.WEM", SearchOption.TopDirectoryOnly);
             foreach (var file in searchQuery)
             {
-                if (convertWEM(file)) File.Move(file, file.Substring(0, file.Length - 3) + "ogg");
+                if (ConvertWEM(file)) File.Move(file, file.Substring(0, file.Length - 3) + "ogg");
             }
         }
 
-        /* Convert a WEM in the working directory */
-        private static bool convertWEM(string inName)
+        /* Convert a WEM to OGG if possible */
+        private static bool ConvertWEM(string inName)
         {
-            RunProgramAndWait("ww2ogg.exe", "\"" + Path.GetFileName(inName) + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + Path.GetFileName(inName) + "_conv\"", directories[2]);
-            RunProgramAndWait("revorb.exe", Path.GetFileName(inName) + "_conv", directories[2]);
+            RunProgramAndWait("ww2ogg.exe", "\"" + Path.GetFileName(inName) + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + Path.GetFileName(inName) + "_conv\"", inName.Substring(0, inName.Length - Path.GetFileName(inName).Length));
+            RunProgramAndWait("revorb.exe", Path.GetFileName(inName) + "_conv", inName.Substring(0, inName.Length - Path.GetFileName(inName).Length));
             if (!File.Exists(inName + "_conv")) return false;
             File.Delete(inName);
             File.Move(inName + "_conv", inName);
             return true;
+        }
+
+        /* Place converter resources in a given directory */
+        private static void AddConvertersToDirectory(string directory)
+        {
+            File.WriteAllBytes(directory + "\\ww2ogg.exe", Properties.Resources.ww2ogg);
+            File.WriteAllBytes(directory + "\\revorb.exe", Properties.Resources.revorb);
+            File.WriteAllBytes(directory + "\\bnkextr.exe", Properties.Resources.bnkextr);
+            File.WriteAllBytes(directory + "\\base_library.zip", Properties.Resources.base_library);
+            File.WriteAllBytes(directory + "\\python36.dll", Properties.Resources.python36);
+            File.WriteAllBytes(directory + "\\packed_codebooks_aoTuV_603.bin", Properties.Resources.packed_codebooks_aoTuV_603);
+        }
+
+        /* Remove converter resources from a given directory */
+        private static void RemoveConvertersFromDirectory(string directory)
+        {
+            File.Delete(directory + "\\ww2ogg.exe");
+            File.Delete(directory + "\\revorb.exe");
+            File.Delete(directory + "\\bnkextr.exe");
+            File.Delete(directory + "\\base_library.zip");
+            File.Delete(directory + "\\python36.dll");
+            File.Delete(directory + "\\packed_codebooks_aoTuV_603.bin");
         }
 
         /* Generic function for running a program and waiting for it to finish */

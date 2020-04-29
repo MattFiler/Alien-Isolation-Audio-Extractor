@@ -103,16 +103,6 @@ namespace AlienIsolationAudioExtractor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] quickbms {
-            get {
-                object obj = ResourceManager.GetObject("quickbms", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] revorb {
             get {
                 object obj = ResourceManager.GetObject("revorb", resourceCulture);
@@ -125,39 +115,27 @@ namespace AlienIsolationAudioExtractor.Properties {
         ///	&quot;soundbank_names&quot;: [
         ///		{
         ///			&quot;original_id&quot;: 34504,
-        ///			&quot;new_name&quot;: &quot;SFX\\Foley\\Pinewood Moves\\HEAVY_OVERALLS_SLOW-10.ogg&quot;
+        ///			&quot;new_name&quot;: &quot;SFX\\Foley\\Pinewood Moves\\HEAVY_OVERALLS_SLOW-10.wav&quot;
         ///		},
         ///		{
         ///			&quot;original_id&quot;: 47464,
-        ///			&quot;new_name&quot;: &quot;Voices\\A1_M0701_RIP_0170.ogg&quot;
+        ///			&quot;new_name&quot;: &quot;Voices\\Russian\\A1_M0701_RIP_0170.wav&quot;
         ///		},
         ///		{
         ///			&quot;original_id&quot;: 54520,
-        ///			&quot;new_name&quot;: &quot;Voices\\A1_CV5_S_USE_SII_N_A.ogg&quot;
+        ///			&quot;new_name&quot;: &quot;Voices\\English(US)\\A1_CV5_S_USE_SII_N_A.wav&quot;
         ///		},
         ///		{
         ///			&quot;original_id&quot;: 73908,
-        ///			&quot;new_name&quot;: &quot;SFX\\Missions\\M04\\SPOT_HullMovmentInVent_Creek_BB_A_01.ogg&quot;
+        ///			&quot;new_name&quot;: &quot;SFX\\Missions\\M04\\SPOT_HullMovmentInVent_Creek_BB_A_01.wav&quot;
         ///		},
         ///		{
         ///			&quot;original_id&quot;: 134229,
-        ///			&quot;new_name&quot;: &quot;Voices\\A1_CV6_S_ATT_C.ogg&quot;
-        ///		},
-        ///		{        /// [rest of string was truncated]&quot;;.
+        ///			&quot;new_name&quot;: &quot;Voices\\Portugues [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string soundbank {
             get {
                 return ResourceManager.GetString("soundbank", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] wavescan {
-            get {
-                object obj = ResourceManager.GetObject("wavescan", resourceCulture);
-                return ((byte[])(obj));
             }
         }
         
