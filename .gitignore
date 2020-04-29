@@ -286,3 +286,11 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+
+
+#BUILD FILES
+Build/Audio Extractor.exe.config
+Build/Newtonsoft.Json.xml
+
+#TESTING PROJECTS NOT FOR RELEASE
+TEST/*

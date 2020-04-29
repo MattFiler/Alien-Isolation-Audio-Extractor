@@ -19,7 +19,7 @@ namespace AlienIsolationAudioExtractor.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -121,17 +121,33 @@ namespace AlienIsolationAudioExtractor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;SoundBanksInfo Platform=&quot;PS3&quot; SchemaVersion=&quot;9&quot;&gt;
-        ///	&lt;RootPaths&gt;
-        ///		&lt;ProjectRoot&gt;F:\BuildAgent\work\d5f94e14b4ebe855\AUDIO\wwise_project\Alien_optimisations\&lt;/ProjectRoot&gt;
-        ///		&lt;SourceFilesRoot&gt;F:\BuildAgent\work\d5f94e14b4ebe855\AUDIO\wwise_project\Alien_optimisations\.cache\PS3\&lt;/SourceFilesRoot&gt;
-        ///		&lt;SoundBanksRoot&gt;F:\BuildAgent\work\d5f94e14b4ebe855\AUDIO\wwise_project\Alien_optimisations\autobuild\PS3\sound\&lt;/SoundBanksRoot&gt;
-        ///		&lt;ExternalSourcesInputFile&gt;&lt;/ExternalSou [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///	&quot;soundbank_names&quot;: [
+        ///		{
+        ///			&quot;original_id&quot;: 34504,
+        ///			&quot;new_name&quot;: &quot;SFX\\Foley\\Pinewood Moves\\HEAVY_OVERALLS_SLOW-10.ogg&quot;
+        ///		},
+        ///		{
+        ///			&quot;original_id&quot;: 47464,
+        ///			&quot;new_name&quot;: &quot;Voices\\A1_M0701_RIP_0170.ogg&quot;
+        ///		},
+        ///		{
+        ///			&quot;original_id&quot;: 54520,
+        ///			&quot;new_name&quot;: &quot;Voices\\A1_CV5_S_USE_SII_N_A.ogg&quot;
+        ///		},
+        ///		{
+        ///			&quot;original_id&quot;: 73908,
+        ///			&quot;new_name&quot;: &quot;SFX\\Missions\\M04\\SPOT_HullMovmentInVent_Creek_BB_A_01.ogg&quot;
+        ///		},
+        ///		{
+        ///			&quot;original_id&quot;: 134229,
+        ///			&quot;new_name&quot;: &quot;Voices\\A1_CV6_S_ATT_C.ogg&quot;
+        ///		},
+        ///		{        /// [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string SOUNDBANKSINFO {
+        internal static string soundbank {
             get {
-                return ResourceManager.GetString("SOUNDBANKSINFO", resourceCulture);
+                return ResourceManager.GetString("soundbank", resourceCulture);
             }
         }
         
