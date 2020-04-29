@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -39,12 +39,12 @@ namespace AlienIsolationAudioExtractor
             AddConvertersToDirectory(directories[2]);
 
             //Get all WEM files into our working directory
-            Console.WriteLine("Copying WEMs...");
-            CopyWemToWorkingDirectory();
             Console.WriteLine("Extracting BNK soundbanks...");
             ExtractBnkToWorkingDirectory();
             Console.WriteLine("Extracting PCK soundbanks...");
             ExtractPckToWorkingDirectory();
+            Console.WriteLine("Copying WEMs...");
+            CopyWemToWorkingDirectory();
 
             //Convert and name the WEMs
             Console.WriteLine("Converting to proper names...");
