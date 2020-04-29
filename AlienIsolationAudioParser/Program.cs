@@ -62,6 +62,8 @@ namespace AlienIsolationAudioExtractor
             //Convert and name the WEMs
             Console.WriteLine("Converting to proper names...");
             renameWEMs();
+            Console.WriteLine("Converting untitled sounds...");
+            tidyWEMs();
 
             //Clear up conversion resources
             Console.WriteLine("Clearing up...");
@@ -79,7 +81,7 @@ namespace AlienIsolationAudioExtractor
             Environment.Exit(0);
         }
 
-        /* Copy existing WEMs from the game's SOUND folder to our working directory */
+        /* Copy existing WEMs to our working directory */
         private static void copyWEMs()
         {
             string[] searchQuery = Directory.GetFiles(directories[0], "*.WEM", SearchOption.AllDirectories);
@@ -89,10 +91,9 @@ namespace AlienIsolationAudioExtractor
             }
         }
 
-        /* Try and extract all soundbank files in directories[0] */
+        /* Try and extract all soundbank files */
         private static void extractBNK()
         {
-            /* BNK Soundbanks */
             var searchQuery = Directory.GetFiles(directories[0], "*.BNK", SearchOption.AllDirectories);
             foreach (var file in searchQuery)
             {
@@ -145,7 +146,7 @@ namespace AlienIsolationAudioExtractor
             }
         }
 
-        /* Match WEMs in the working directory with an entry in the soundbank, then export */
+        /* Match WEMs in the working directory with an entry in the soundbank, then convert and rename */
         private static void renameWEMs()
         {
             JArray soundbankData = JObject.Parse(Properties.Resources.soundbank)["soundbank_names"].ToObject<JArray>();
@@ -163,24 +164,37 @@ namespace AlienIsolationAudioExtractor
 
                         Directory.CreateDirectory(outPath);
                         outPath += "/" + outName;
+                        if (convertWEM(file)) outPath = outPath.Substring(0, outPath.Length - 3) + "ogg";
+                        else outPath = outPath.Substring(0, outPath.Length - 3) + "wem";
 
-                        RunProgramAndWait("ww2ogg.exe", "\"" + inName + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + inName + "_conv\"", directories[2]);
-                        RunProgramAndWait("revorb.exe", inName + "_conv", directories[2]);
-                        if (File.Exists(file + "_conv"))
-                        {
-                            outPath = outPath.Substring(0, outPath.Length - 3) + "ogg";
-                            if (File.Exists(outPath)) File.Delete(outPath);
-                            File.Move(file + "_conv", outPath);
-                        }
-                        else
-                        {
-                            File.Move(file, outPath.Substring(0, outPath.Length - 3) + "wem");
-                        }
+                        if (File.Exists(outPath)) File.Delete(outPath);
+                        File.Move(file, outPath);
                         File.Delete(file);
                         break;
                     }
                 }
             }
+        }
+
+        /* Convert remaining untitled WEMs in the working directory to OGG if possible */
+        private static void tidyWEMs()
+        {
+            var searchQuery = Directory.GetFiles(directories[2], "*.WEM", SearchOption.TopDirectoryOnly);
+            foreach (var file in searchQuery)
+            {
+                if (convertWEM(file)) File.Move(file, file.Substring(0, file.Length - 3) + "ogg");
+            }
+        }
+
+        /* Convert a WEM in the working directory */
+        private static bool convertWEM(string inName)
+        {
+            RunProgramAndWait("ww2ogg.exe", "\"" + inName + "\" --pcb packed_codebooks_aoTuV_603.bin -o \"" + inName + "_conv\"", directories[2]);
+            RunProgramAndWait("revorb.exe", inName + "_conv", directories[2]);
+            if (!File.Exists(inName + "_conv")) return false;
+            File.Delete(inName);
+            File.Move(inName + "_conv", inName);
+            return true;
         }
 
         /* Generic function for running a program and waiting for it to finish */
